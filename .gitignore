@@ -1,0 +1,5 @@
+firmware/app/credentials.py
+server/readings.db
+__pycache__/
+*.pyc
+.DS_Store

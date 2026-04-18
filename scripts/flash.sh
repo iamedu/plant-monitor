@@ -17,19 +17,25 @@ echo "Erasing flash on $PORT..."
 python3 -m esptool --chip esp32 --port "$PORT" erase_flash
 
 echo "Flashing MicroPython from $FIRMWARE_BIN..."
-python3 -m esptool --chip esp32 --port "$PORT" --baud 460800 write_flash -z 0 "$FIRMWARE_BIN"
+python3 -m esptool --chip esp32 --port "$PORT" --baud 115200 write_flash -z 0x1000 "$FIRMWARE_BIN"
+
+echo "Waiting for board to settle..."
+sleep 3
 
 echo "Copying app files..."
-mpremote connect "$PORT" fs mkdir app || true
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/__init__.py" :app/__init__.py
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/config.py" :app/config.py
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/logic.py" :app/logic.py
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/main.py" :app/main.py
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/sensors.py" :app/sensors.py
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/main.py" :main.py
-
-echo "Resetting board..."
-mpremote connect "$PORT" reset
+APP="$ROOT_DIR/firmware/app"
+mpremote connect "$PORT" \
+  fs mkdir app + \
+  fs cp "$APP/__init__.py"    :app/__init__.py + \
+  fs cp "$APP/config.py"      :app/config.py + \
+  fs cp "$APP/logic.py"       :app/logic.py + \
+  fs cp "$APP/main.py"        :app/main.py + \
+  fs cp "$APP/sensors.py"     :app/sensors.py + \
+  fs cp "$APP/wifi.py"        :app/wifi.py + \
+  fs cp "$APP/uploader.py"    :app/uploader.py + \
+  fs cp "$APP/credentials.py" :app/credentials.py + \
+  fs cp "$ROOT_DIR/firmware/main.py" :main.py + \
+  reset
 
 echo "Done. Open a REPL with:"
 echo "  mpremote connect $PORT repl"

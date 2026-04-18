@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Monitor</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #f5f5f5;
+      color: #222;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .ts { font-size: 0.8rem; color: #999; margin-bottom: 1.5rem; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      text-align: center;
+    }
+    .card .label { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: .05em; }
+    .card .value { font-size: 1.6rem; font-weight: 700; margin-top: 0.3rem; }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .badge.ok     { background: #d1fae5; color: #065f46; }
+    .badge.warn   { background: #fee2e2; color: #991b1b; }
+    .badge.unknown { background: #e5e7eb; color: #374151; }
+    .chart-wrap {
+      background: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .no-data { text-align: center; color: #aaa; padding: 3rem; }
+  </style>
+</head>
+<body>
+  <h1>Plant Monitor</h1>
+  <p class="ts" id="ts">Loading...</p>
+  <div class="cards">
+    <div class="card"><div class="label">Temperature</div><div class="value" id="temp">—</div></div>
+    <div class="card"><div class="label">Humidity</div><div class="value" id="hum">—</div></div>
+    <div class="card"><div class="label">Light</div><div class="value" id="light">—</div></div>
+    <div class="card"><div class="label">Soil</div><div class="value" id="soil">—</div></div>
+    <div class="card"><div class="label">Needs Water</div><div class="value" id="water">—</div></div>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+    <p class="no-data" id="no-data" style="display:none">No readings yet</p>
+  </div>
+
+  <script>
+    const METRICS = [
+      { key: 'temperature_c',       label: 'Temp (°C)',   color: '#ef4444' },
+      { key: 'humidity_percent',     label: 'Humidity (%)',color: '#3b82f6' },
+      { key: 'light_lux',            label: 'Light (lux)', color: '#f59e0b' },
+      { key: 'soil_moisture_percent',label: 'Soil (%)',    color: '#22c55e' },
+    ];
+
+    let chart;
+
+    function initChart() {
+      const ctx = document.getElementById('chart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [] },
+        options: {
+          responsive: true,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { ticks: { maxTicksLimit: 8, maxRotation: 30 } },
+            y: { beginAtZero: false },
+          },
+          plugins: { legend: { position: 'bottom' } },
+        },
+      });
+    }
+
+    function fmtTs(ts) {
+      return new Date(ts).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function refresh() {
+      let data;
+      try {
+        const resp = await fetch('/readings?limit=50');
+        data = await resp.json();
+      } catch (e) {
+        document.getElementById('ts').textContent = 'Error fetching data';
+        return;
+      }
+
+      if (!data.length) {
+        document.getElementById('ts').textContent = 'No readings yet';
+        document.getElementById('no-data').style.display = '';
+        return;
+      }
+
+      document.getElementById('no-data').style.display = 'none';
+
+      const latest = data[0];
+      document.getElementById('temp').textContent  = latest.temperature_c        != null ? latest.temperature_c + ' °C'  : '—';
+      document.getElementById('hum').textContent   = latest.humidity_percent     != null ? latest.humidity_percent + ' %' : '—';
+      document.getElementById('light').textContent = latest.light_lux            != null ? latest.light_lux + ' lx'      : '—';
+      document.getElementById('soil').textContent  = latest.soil_moisture_percent != null ? latest.soil_moisture_percent + ' %' : '—';
+      document.getElementById('ts').textContent    = 'Last reading: ' + new Date(latest.ts).toLocaleString();
+
+      const nw = latest.needs_water;
+      const waterEl = document.getElementById('water');
+      if (nw === null || nw === undefined) {
+        waterEl.innerHTML = '<span class="badge unknown">N/A</span>';
+      } else if (nw === 1 || nw === true) {
+        waterEl.innerHTML = '<span class="badge warn">Yes</span>';
+      } else {
+        waterEl.innerHTML = '<span class="badge ok">No</span>';
+      }
+
+      const rows = [...data].reverse();
+      const labels = rows.map(r => fmtTs(r.ts));
+      const datasets = METRICS.map(m => ({
+        label: m.label,
+        data: rows.map(r => r[m.key]),
+        borderColor: m.color,
+        backgroundColor: m.color + '18',
+        tension: 0.3,
+        fill: false,
+        pointRadius: 2,
+        spanGaps: true,
+      }));
+
+      chart.data.labels = labels;
+      chart.data.datasets = datasets;
+      chart.update();
+    }
+
+    let fetching = false;
+    async function guardedRefresh() {
+      if (fetching) return;
+      fetching = true;
+      try { await refresh(); } finally { fetching = false; }
+    }
+
+    initChart();
+    guardedRefresh();
+    setInterval(guardedRefresh, 60_000);
+  </script>
+</body>
+</html>
