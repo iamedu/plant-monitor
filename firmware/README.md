@@ -14,7 +14,7 @@ First version of the Plant Monitor firmware for ESP32 using MicroPython.
 - `tests/` unit tests for logic that can run on desktop Python
 
 ## Hardware assumptions
-- ESP32-S3
+- ESP32
 - Capacitive soil moisture sensor on ADC pin 34
 - DHT11 data pin on GPIO 4
 - Photoresistor on ADC pin 5 via voltage divider

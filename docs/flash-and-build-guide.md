@@ -7,7 +7,7 @@ Repo looks healthy and simple right now.
 Update: firmware has now been adapted to your actual kit parts:
 - DHT11
 - analog photoresistor
-- ESP32-S3 flash script added at `scripts/flash.sh`
+- ESP32 flash script added at `scripts/flash.sh`
 
 ### What is already in place
 - MicroPython firmware scaffold exists in `firmware/app/`
@@ -26,7 +26,7 @@ The code is currently written for:
 
 ### Hardware now matched to your actual kit
 From your parts list and memory, your real kit is:
-- ESP32-S3
+- ESP32
 - capacitive soil sensor
 - DHT11 from the kit
 - photoresistor from the kit
@@ -36,7 +36,7 @@ The firmware has now been updated to match that hardware.
 
 ## Recommended build order
 
-1. Confirm which ESP32-S3 serial port appears on your Mac
+1. Confirm which ESP32 serial port appears on your Mac
 2. Flash MicroPython to the board
 3. Copy firmware files to the board
 4. Open the serial REPL
@@ -46,7 +46,7 @@ The firmware has now been updated to match that hardware.
 
 ## Step 1: connect the board
 
-Plug the ESP32-S3 into your Mac with a USB-C data cable.
+Plug the ESP32 into your Mac with a USB data cable.
 
 Then list serial devices:
 
@@ -80,24 +80,24 @@ If `esptool` is not on PATH, use:
 python3 -m esptool
 ```
 
-## Step 3: download MicroPython for ESP32-S3
+## Step 3: download MicroPython for ESP32
 
-Use the ESP32-S3 firmware from MicroPython:
+Use the ESP32 generic firmware from MicroPython:
 
-- https://micropython.org/download/ESP32-S3/
+- https://micropython.org/download/ESP32_GENERIC/
 
 Download the latest stable `.bin` file.
 
 Example filename:
 
 ```bash
-ESP32_GENERIC_S3-20250415-v1.24.1.bin
+ESP32_GENERIC-20250415-v1.24.1.bin
 ```
 
 Save it somewhere easy, for example:
 
 ```bash
-~/Downloads/ESP32_GENERIC_S3.bin
+~/Downloads/ESP32_GENERIC.bin
 ```
 
 ## Step 4: erase and flash the board
@@ -107,13 +107,13 @@ Replace `/dev/cu.usbmodemXXXX` with your actual port.
 ### Erase flash
 
 ```bash
-python3 -m esptool --chip esp32s3 --port /dev/cu.usbmodemXXXX erase_flash
+python3 -m esptool --chip esp32 --port /dev/cu.usbserial-XXXX erase_flash
 ```
 
 ### Write MicroPython
 
 ```bash
-python3 -m esptool --chip esp32s3 --port /dev/cu.usbmodemXXXX --baud 460800 write_flash -z 0 ~/Downloads/ESP32_GENERIC_S3.bin
+python3 -m esptool --chip esp32 --port /dev/cu.usbserial-XXXX --baud 460800 write_flash -z 0 ~/Downloads/ESP32_GENERIC.bin
 ```
 
 If the board does not enter bootloader mode automatically:
@@ -144,11 +144,11 @@ Ctrl-X
 
 ## One-command flash option
 
-After downloading a MicroPython ESP32-S3 binary, you can do the whole process with:
+After downloading a MicroPython ESP32 binary, you can do the whole process with:
 
 ```bash
 cd /Users/iamedu/.openclaw/workspace/plant-monitor
-./scripts/flash.sh /dev/cu.usbmodemXXXX ~/Downloads/ESP32_GENERIC_S3.bin
+./scripts/flash.sh /dev/cu.usbmodemXXXX ~/Downloads/ESP32_GENERIC.bin
 ```
 
 ## Step 6: copy the current firmware
@@ -189,7 +189,7 @@ That now matches your actual kit.
 
 ### Minimal first successful bring-up
 Start with just:
-- ESP32-S3
+- ESP32
 - soil moisture sensor
 - DHT11
 
@@ -274,7 +274,7 @@ mpremote connect /dev/cu.usbmodemXXXX repl
 ## What I recommend you do next
 
 ### Fastest path to first success
-1. Flash MicroPython to ESP32-S3
+1. Flash MicroPython to ESP32
 2. Confirm REPL works
 3. Run `./scripts/flash.sh ...`
 4. Wire soil sensor + DHT11 first
