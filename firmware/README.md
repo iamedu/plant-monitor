@@ -17,7 +17,7 @@ First version of the Plant Monitor firmware for ESP32 using MicroPython.
 - ESP32
 - Capacitive soil moisture sensor on ADC pin 34
 - DHT11 data pin on GPIO 4
-- Photoresistor on ADC pin 5 via voltage divider
+- Photoresistor on ADC pin 32 via voltage divider
 
 ## Build / install
 
