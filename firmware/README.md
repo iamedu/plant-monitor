@@ -4,8 +4,8 @@ First version of the Plant Monitor firmware for ESP32 using MicroPython.
 
 ## Features
 - Reads soil moisture from an analog capacitive sensor
-- Reads temperature and humidity from a DHT22
-- Reads ambient light from a BH1750 over I2C
+- Reads temperature and humidity from a DHT11
+- Reads ambient light from a photoresistor over analog input
 - Produces a normalized sensor payload
 - Supports threshold-based water-needed detection
 
@@ -14,10 +14,10 @@ First version of the Plant Monitor firmware for ESP32 using MicroPython.
 - `tests/` unit tests for logic that can run on desktop Python
 
 ## Hardware assumptions
-- ESP32
+- ESP32-S3
 - Capacitive soil moisture sensor on ADC pin 34
-- DHT22 data pin on GPIO 4
-- BH1750 on I2C SDA 21 / SCL 22
+- DHT11 data pin on GPIO 4
+- Photoresistor on ADC pin 5 via voltage divider
 
 ## Build / install
 
@@ -42,9 +42,11 @@ mpremote connect auto fs cp firmware/app/main.py :main.py
 ### 3. Configure pins and calibration
 Edit `firmware/app/config.py` before copying if your wiring differs.
 
-The soil sensor calibration defaults are placeholders:
+The calibration defaults are placeholders:
 - `SOIL_DRY = 3200`
 - `SOIL_WET = 1400`
+- `LIGHT_DARK = 4095`
+- `LIGHT_BRIGHT = 1500`
 
 You should recalibrate after wiring your actual sensor.
 

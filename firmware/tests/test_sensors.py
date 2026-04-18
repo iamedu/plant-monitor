@@ -4,7 +4,7 @@ import unittest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.sensors import BH1750Sensor, DHT22Sensor, SoilMoistureSensor
+from app.sensors import DHT11Sensor, PhotoresistorSensor, SoilMoistureSensor
 
 
 class FakeADC:
@@ -26,16 +26,12 @@ class FakeDHT:
         return 48.0
 
 
-class FakeI2C:
-    def __init__(self, raw_bytes):
-        self.raw_bytes = raw_bytes
-        self.writes = []
+class FakeLightADC:
+    def __init__(self, value):
+        self.value = value
 
-    def writeto(self, address, data):
-        self.writes.append((address, data))
-
-    def readfrom(self, address, count):
-        return self.raw_bytes
+    def read(self):
+        return self.value
 
 
 class SensorTests(unittest.TestCase):
@@ -44,14 +40,12 @@ class SensorTests(unittest.TestCase):
         self.assertEqual(sensor.read_percent(), 50.0)
 
     def test_dht_sensor_read(self):
-        sensor = DHT22Sensor(sensor=FakeDHT())
+        sensor = DHT11Sensor(sensor=FakeDHT())
         self.assertEqual(sensor.read(), (22.5, 48.0))
 
-    def test_bh1750_read_lux(self):
-        fake_i2c = FakeI2C(bytes([0x01, 0x2C]))
-        sensor = BH1750Sensor(i2c=fake_i2c)
-        self.assertEqual(sensor.read_lux(), 250.0)
-        self.assertEqual(len(fake_i2c.writes), 2)
+    def test_photoresistor_read_lux(self):
+        sensor = PhotoresistorSensor(dark_value=4095, bright_value=1595, adc=FakeLightADC(2845))
+        self.assertEqual(sensor.read_lux(), 500.0)
 
 
 if __name__ == "__main__":

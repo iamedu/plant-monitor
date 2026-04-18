@@ -1,15 +1,15 @@
 try:
-    from .config import BH1750_I2C_ADDR, SOIL_ADC_PIN, DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN
-    from .logic import soil_percent
+    from .config import LIGHT_ADC_PIN, LIGHT_BRIGHT, LIGHT_DARK, SOIL_ADC_PIN, DHT_PIN
+    from .logic import clamp, soil_percent
 except ImportError:
-    from config import BH1750_I2C_ADDR, SOIL_ADC_PIN, DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN
-    from logic import soil_percent
+    from config import LIGHT_ADC_PIN, LIGHT_BRIGHT, LIGHT_DARK, SOIL_ADC_PIN, DHT_PIN
+    from logic import clamp, soil_percent
 
 try:
-    from machine import ADC, Pin, I2C
+    from machine import ADC, Pin
     import dht
 except ImportError:
-    ADC = Pin = I2C = None
+    ADC = Pin = None
     dht = None
 
 
@@ -35,40 +35,45 @@ class SoilMoistureSensor:
         return soil_percent(self.read_raw(), self.dry_value, self.wet_value)
 
 
-class DHT22Sensor:
+class DHT11Sensor:
     def __init__(self, sensor=None):
         if sensor is not None:
             self.sensor = sensor
         elif dht is not None and Pin is not None:
-            self.sensor = dht.DHT22(Pin(DHT_PIN))
+            self.sensor = dht.DHT11(Pin(DHT_PIN))
         else:
             self.sensor = None
 
     def read(self):
         if self.sensor is None:
-            raise RuntimeError("DHT22 unavailable")
+            raise RuntimeError("DHT11 unavailable")
         self.sensor.measure()
         return self.sensor.temperature(), self.sensor.humidity()
 
 
-class BH1750Sensor:
-    POWER_ON = b'\x01'
-    CONT_H_RES_MODE = b'\x10'
-
-    def __init__(self, i2c=None, address=BH1750_I2C_ADDR):
-        self.address = address
-        if i2c is not None:
-            self.i2c = i2c
-        elif I2C is not None and Pin is not None:
-            self.i2c = I2C(0, scl=Pin(I2C_SCL_PIN), sda=Pin(I2C_SDA_PIN))
+class PhotoresistorSensor:
+    def __init__(self, dark_value=LIGHT_DARK, bright_value=LIGHT_BRIGHT, adc=None):
+        self.dark_value = dark_value
+        self.bright_value = bright_value
+        if adc is not None:
+            self.adc = adc
+        elif ADC is not None and Pin is not None:
+            self.adc = ADC(Pin(LIGHT_ADC_PIN))
+            if hasattr(self.adc, "atten"):
+                self.adc.atten(ADC.ATTN_11DB)
         else:
-            self.i2c = None
+            self.adc = None
+
+    def read_raw(self):
+        if self.adc is None:
+            raise RuntimeError("Light ADC unavailable")
+        return self.adc.read()
 
     def read_lux(self):
-        if self.i2c is None:
-            raise RuntimeError("I2C unavailable")
-        self.i2c.writeto(self.address, self.POWER_ON)
-        self.i2c.writeto(self.address, self.CONT_H_RES_MODE)
-        data = self.i2c.readfrom(self.address, 2)
-        raw = (data[0] << 8) | data[1]
-        return round(raw / 1.2, 1)
+        raw = self.read_raw()
+        span = self.dark_value - self.bright_value
+        if span == 0:
+            raise ValueError("light calibration values must differ")
+        pct = ((self.dark_value - raw) / span) * 100
+        pct = round(clamp(pct, 0, 100), 1)
+        return round((pct / 100) * 1000, 1)
