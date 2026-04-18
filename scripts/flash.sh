@@ -20,8 +20,13 @@ echo "Flashing MicroPython from $FIRMWARE_BIN..."
 python3 -m esptool --chip esp32 --port "$PORT" --baud 460800 write_flash -z 0 "$FIRMWARE_BIN"
 
 echo "Copying app files..."
-mpremote connect "$PORT" fs cp -r "$ROOT_DIR/firmware/app" :
-mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/main.py" :main.py
+mpremote connect "$PORT" fs mkdir app || true
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/__init__.py" :app/__init__.py
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/config.py" :app/config.py
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/logic.py" :app/logic.py
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/main.py" :app/main.py
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/app/sensors.py" :app/sensors.py
+mpremote connect "$PORT" fs cp "$ROOT_DIR/firmware/main.py" :main.py
 
 echo "Resetting board..."
 mpremote connect "$PORT" reset
