@@ -35,11 +35,12 @@ From your parts list and memory, your real kit is:
 The firmware has now been updated to match that hardware.
 
 ### Current tested pin map
-- `SOIL_ADC_PIN = 34`
+- `SOIL_ADC_PIN = 15`
 - `DHT_PIN = 4`
-- `LIGHT_ADC_PIN = 32`
+- `LIGHT_ADC_PIN = 2`
 
-Note: GPIO 5 was tested and is invalid on Edu's board, so the photoresistor now uses GPIO 32.
+This pin map keeps all sensor wiring on one side of Edu's ESP32 board.
+Note: GPIO 5 was tested and is invalid on Edu's board.
 
 ## Recommended build order
 
