@@ -8,12 +8,12 @@ except ImportError:
     from sensors import SoilMoistureSensor, DHT11Sensor, PhotoresistorSensor
 
 
-def read_all_sensors():
-    soil_sensor = SoilMoistureSensor(SOIL_DRY, SOIL_WET)
+def read_all_sensors(include_soil=True):
+    soil_sensor = SoilMoistureSensor(SOIL_DRY, SOIL_WET) if include_soil else None
     climate_sensor = DHT11Sensor()
     light_sensor = PhotoresistorSensor()
 
-    soil_pct = soil_sensor.read_percent()
+    soil_pct = soil_sensor.read_percent() if soil_sensor is not None else None
     temperature_c, humidity_pct = climate_sensor.read()
     light_lux = light_sensor.read_lux()
 

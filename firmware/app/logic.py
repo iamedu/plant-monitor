@@ -12,6 +12,8 @@ def soil_percent(raw_value, dry_value, wet_value):
 
 
 def needs_water(soil_pct, threshold_pct):
+    if soil_pct is None:
+        return None
     return soil_pct <= threshold_pct
 
 

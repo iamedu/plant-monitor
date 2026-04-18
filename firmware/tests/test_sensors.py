@@ -4,6 +4,7 @@ import unittest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from app.logic import build_payload
 from app.sensors import DHT11Sensor, PhotoresistorSensor, SoilMoistureSensor
 
 
@@ -44,8 +45,19 @@ class SensorTests(unittest.TestCase):
         self.assertEqual(sensor.read(), (22.5, 48.0))
 
     def test_photoresistor_read_lux(self):
-        sensor = PhotoresistorSensor(dark_value=4095, bright_value=1595, adc=FakeLightADC(2845))
+        sensor = PhotoresistorSensor(dark_value=0, bright_value=2360, adc=FakeLightADC(1180))
         self.assertEqual(sensor.read_lux(), 500.0)
+
+    def test_build_payload_without_soil_sensor(self):
+        payload = build_payload(
+            soil_pct=None,
+            temperature_c=22.5,
+            humidity_pct=48.0,
+            light_lux=500.0,
+            threshold_pct=30,
+        )
+        self.assertIsNone(payload["soil_moisture_percent"])
+        self.assertIsNone(payload["needs_water"])
 
 
 if __name__ == "__main__":
