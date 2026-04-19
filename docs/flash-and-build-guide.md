@@ -121,7 +121,7 @@ python3 -m esptool --chip esp32 --port /dev/cu.usbserial-XXXX erase_flash
 ### Write MicroPython
 
 ```bash
-python3 -m esptool --chip esp32 --port /dev/cu.usbserial-XXXX --baud 460800 write_flash -z 0 ~/Downloads/ESP32_GENERIC.bin
+python3 -m esptool --chip esp32 --port /dev/cu.usbserial-XXXX --baud 115200 write_flash -z 0x1000 ~/Downloads/ESP32_GENERIC.bin
 ```
 
 If the board does not enter bootloader mode automatically:
@@ -161,28 +161,22 @@ cd /Users/iamedu/.openclaw/workspace/plant-monitor
 
 ## Step 6: copy the current firmware
 
-From repo root:
+The flash script handles this automatically. If you need to copy files manually, use a single chained mpremote session (multiple `mpremote connect` calls fail due to the board's raw REPL state):
 
 ```bash
-cd /Users/iamedu/.openclaw/workspace/plant-monitor
-```
-
-Copy the app folder:
-
-```bash
-mpremote connect /dev/cu.usbmodemXXXX fs cp -r firmware/app :
-```
-
-Copy main entrypoint:
-
-```bash
-mpremote connect /dev/cu.usbmodemXXXX fs cp firmware/app/main.py :main.py
-```
-
-Soft reset the board:
-
-```bash
-mpremote connect /dev/cu.usbmodemXXXX reset
+APP=firmware/app
+mpremote connect /dev/cu.usbserial-XXXX \
+  fs mkdir app + \
+  fs cp "$APP/__init__.py"    :app/__init__.py + \
+  fs cp "$APP/config.py"      :app/config.py + \
+  fs cp "$APP/logic.py"       :app/logic.py + \
+  fs cp "$APP/main.py"        :app/main.py + \
+  fs cp "$APP/sensors.py"     :app/sensors.py + \
+  fs cp "$APP/wifi.py"        :app/wifi.py + \
+  fs cp "$APP/uploader.py"    :app/uploader.py + \
+  fs cp "$APP/credentials.py" :app/credentials.py + \
+  fs cp firmware/main.py      :main.py + \
+  reset
 ```
 
 ## Step 7: wiring expectations
@@ -228,28 +222,31 @@ That gets you to a working first version faster.
 
 ## Step 9: soil calibration
 
-Current placeholders in `firmware/app/config.py`:
+Calibration constants live in **`server/config.py`** (not firmware). The ESP32 sends raw ADC values; the server does the conversion. To recalibrate, edit `server/config.py` and restart the server — no reflash needed.
 
 ```python
-SOIL_DRY = 3200
-SOIL_WET = 1400
+SOIL_DRY = 2962   # raw ADC reading in dry conditions
+SOIL_WET = 2485   # raw ADC reading in wet conditions
+WATER_THRESHOLD_PERCENT = 30
 ```
-
-These are not guaranteed to match your actual sensor.
 
 ### Calibration process
-1. Read raw soil value in fully dry air
-2. Read raw value in fully wet soil or water
-3. Update config values
+1. Connect ESP32 via USB and open a REPL: `mpremote connect /dev/cu.usbserial-0001 exec "..."`
+2. Read raw ADC with WiFi **off** (ADC2 conflict — see note below):
+   ```python
+   import machine, network
+   network.WLAN(network.STA_IF).active(False)
+   adc = machine.ADC(machine.Pin(15))
+   adc.atten(machine.ADC.ATTN_11DB)
+   print(adc.read())
+   ```
+3. Read in dry conditions → set `SOIL_DRY`
+4. Read in wet conditions → set `SOIL_WET`
+5. Edit `server/config.py` and restart the server
 
-Example target:
+### ADC2 / WiFi conflict
 
-```python
-SOIL_DRY = <your dry reading>
-SOIL_WET = <your wet reading>
-```
-
-Then percent calculation becomes meaningful.
+GPIO 2 (light) and GPIO 15 (soil) are ADC2 pins. The ESP32's WiFi radio shares ADC2, so readings return 0 when WiFi is active. The firmware reads sensors **before** connecting WiFi each cycle to work around this. A permanent fix is rewiring sensors to ADC1 pins (GPIO 32–39).
 
 ## Step 10: useful commands while building
 
