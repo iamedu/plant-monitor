@@ -2,6 +2,7 @@ firmware/app/credentials.py
 server/readings.db
 server/supabase_local.json
 ios/PlantMonitorApp/SupabaseConfig.json
+PlantMonitor.xcodeproj/project.xcworkspace/xcuserdata/
 __pycache__/
 *.pyc
 .DS_Store

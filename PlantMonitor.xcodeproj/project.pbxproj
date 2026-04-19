@@ -19,7 +19,7 @@
 /* Begin PBXFileReference section */
 		06D9AB8F68CE3A1BE7902949 /* PlantMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantMonitorApp.swift; sourceTree = "<group>"; };
 		30751CB5854B4C9FB8F7C033 /* SupabaseConfig.example.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SupabaseConfig.example.json; sourceTree = "<group>"; };
-		319C8D14841EDC4196CE8603 /* PlantMonitorApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PlantMonitorApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		319C8D14841EDC4196CE8603 /* PlantMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlantMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32F64D24BBF6DD1EC0C7A9A6 /* SupabaseConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SupabaseConfig.json; sourceTree = "<group>"; };
 		3D337CAEF1AC91BF8463EEAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4264390EB0250CBC9BF3E79B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,7 +32,7 @@
 		0489D5024D20AAD85084F61C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				319C8D14841EDC4196CE8603 /* PlantMonitorApp.app */,
+				319C8D14841EDC4196CE8603 /* PlantMonitor.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,7 +79,7 @@
 			packageProductDependencies = (
 			);
 			productName = PlantMonitorApp;
-			productReference = 319C8D14841EDC4196CE8603 /* PlantMonitorApp.app */;
+			productReference = 319C8D14841EDC4196CE8603 /* PlantMonitor.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -92,7 +92,6 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					4105F7EB3C83F0C27E3F7D2D = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -179,8 +178,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+								ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -200,6 +200,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -241,8 +242,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
+								ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -255,6 +257,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -268,7 +271,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ios/PlantMonitorApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -291,7 +293,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ios/PlantMonitorApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
