@@ -1,0 +1,43 @@
+name: PlantMonitor
+options:
+  minimumXcodeGenVersion: 2.38.0
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+packages: {}
+targets:
+  PlantMonitorApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: ios/PlantMonitorApp
+    resources:
+      - path: ios/PlantMonitorApp/SupabaseConfig.example.json
+        optional: true
+      - path: ios/PlantMonitorApp/SupabaseConfig.json
+        optional: true
+    info:
+      path: ios/PlantMonitorApp/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.iamedu.PlantMonitorApp
+        PRODUCT_NAME: PlantMonitor
+        TARGETED_DEVICE_FAMILY: 1
+        GENERATE_INFOPLIST_FILE: false
+        INFOPLIST_FILE: ios/PlantMonitorApp/Info.plist
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0
+schemes:
+  PlantMonitorApp:
+    build:
+      targets:
+        PlantMonitorApp: all
+    run:
+      config: Debug

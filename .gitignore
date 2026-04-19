@@ -1,6 +1,7 @@
 firmware/app/credentials.py
 server/readings.db
 server/supabase_local.json
+ios/PlantMonitorApp/SupabaseConfig.json
 __pycache__/
 *.pyc
 .DS_Store
