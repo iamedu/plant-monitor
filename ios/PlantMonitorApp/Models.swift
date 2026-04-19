@@ -4,6 +4,12 @@ struct SupabaseConfig: Decodable {
     let url: String
     let publishableKey: String
     let table: String
+
+    enum CodingKeys: String, CodingKey {
+        case url
+        case publishableKey = "publishable_key"
+        case table
+    }
 }
 
 struct PlantReading: Identifiable, Decodable {
