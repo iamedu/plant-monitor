@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 struct ContentView: View {
     @EnvironmentObject var store: ReadingsStore
@@ -11,6 +12,15 @@ struct ContentView: View {
                         LatestReadingCard(reading: latest)
                             .listRowInsets(EdgeInsets())
                             .padding(.vertical, 8)
+                    }
+                }
+
+                if !store.readings.isEmpty {
+                    Section("Charts") {
+                        MetricChartSection(title: "Soil Moisture", color: .green, readings: store.readings) { $0.soilMoisturePercent }
+                        MetricChartSection(title: "Temperature", color: .orange, readings: store.readings) { $0.temperatureC }
+                        MetricChartSection(title: "Humidity", color: .blue, readings: store.readings) { $0.humidityPercent }
+                        MetricChartSection(title: "Light", color: .yellow, readings: store.readings) { $0.lightLux }
                     }
                 }
 
@@ -87,6 +97,53 @@ struct MetricView: View {
                 .font(.headline)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct MetricChartSection: View {
+    let title: String
+    let color: Color
+    let readings: [PlantReading]
+    let value: (PlantReading) -> Double?
+
+    private var points: [(Date, Double)] {
+        readings.compactMap { reading in
+            guard let ts = reading.timestamp, let v = value(reading) else { return nil }
+            return (ts, v)
+        }
+        .sorted { $0.0 < $1.0 }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+            if points.isEmpty {
+                Text("No data yet")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                Chart {
+                    ForEach(Array(points.enumerated()), id: \.offset) { _, point in
+                        LineMark(
+                            x: .value("Time", point.0),
+                            y: .value(title, point.1)
+                        )
+                        .foregroundStyle(color)
+                        AreaMark(
+                            x: .value("Time", point.0),
+                            y: .value(title, point.1)
+                        )
+                        .foregroundStyle(color.opacity(0.15))
+                    }
+                }
+                .frame(height: 160)
+                .chartXAxis {
+                    AxisMarks(values: .automatic(desiredCount: 4))
+                }
+            }
+        }
+        .padding(.vertical, 8)
     }
 }
 
