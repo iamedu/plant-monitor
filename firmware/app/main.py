@@ -26,11 +26,11 @@ def read_all_sensors(include_soil=True):
 def run_loop(interval_s=300):
     import time
     try:
-        from .wifi import connect
+        from .wifi import connect, disconnect
         from .uploader import post_reading
         from .credentials import WIFI_SSID, WIFI_PASSWORD, SERVER_URL
     except ImportError:
-        from wifi import connect
+        from wifi import connect, disconnect
         from uploader import post_reading
         from credentials import WIFI_SSID, WIFI_PASSWORD, SERVER_URL
 
@@ -38,6 +38,7 @@ def run_loop(interval_s=300):
         payload = read_all_sensors(include_soil=True)
         connect(WIFI_SSID, WIFI_PASSWORD)
         post_reading(SERVER_URL, payload)
+        disconnect()
         time.sleep(interval_s)
 
 
