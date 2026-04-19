@@ -1,5 +1,6 @@
 firmware/app/credentials.py
 server/readings.db
+server/supabase_local.json
 __pycache__/
 *.pyc
 .DS_Store

@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 import db
 import logic
+import supabase_client
 from config import SOIL_DRY, SOIL_WET, LIGHT_DARK, LIGHT_BRIGHT, WATER_THRESHOLD_PERCENT
 
 STATIC_DIR = Path(__file__).parent / "static"
@@ -37,6 +38,21 @@ def create_reading(reading: Reading):
     lux = logic.light_lux(reading.light_raw, LIGHT_DARK, LIGHT_BRIGHT) if reading.light_raw is not None else None
     nw = logic.needs_water(soil_pct, WATER_THRESHOLD_PERCENT)
     db.insert(ts, reading, soil_pct, lux, nw)
+
+    if supabase_client.is_enabled():
+        supabase_client.insert_reading(
+            {
+                "ts": ts,
+                "temperature_c": reading.temperature_c,
+                "humidity_percent": reading.humidity_percent,
+                "soil_moisture_raw": reading.soil_moisture_raw,
+                "soil_moisture_percent": soil_pct,
+                "light_raw": reading.light_raw,
+                "light_lux": lux,
+                "needs_water": nw,
+            }
+        )
+
     return {"ts": ts}
 
 
