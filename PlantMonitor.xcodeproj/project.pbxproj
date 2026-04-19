@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22F897692F95828100CBDF0C /* SupabaseConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 22F897682F95828100CBDF0C /* SupabaseConfig.json */; };
 		59F4B78BF0E92AD9CBA76242 /* PlantMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D9AB8F68CE3A1BE7902949 /* PlantMonitorApp.swift */; };
 		8288ED6AFC0C44966F462088 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4264390EB0250CBC9BF3E79B /* ContentView.swift */; };
 		93ED87455662088CF6CC97A7 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC39DFFE43689F1CEFBFF2E /* Models.swift */; };
 		9B0C8BDC1702B680E5C4AE68 /* SupabaseConfig.example.json in Resources */ = {isa = PBXBuildFile; fileRef = 30751CB5854B4C9FB8F7C033 /* SupabaseConfig.example.json */; };
 		9C8FBE6C006237A89BF0B244 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B0ABDC96050028260CA6A8 /* SupabaseService.swift */; };
 		CCBF7E708F7258A589F9EE5B /* ReadingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBFBEBFC65ACC49F3CCACFE /* ReadingsStore.swift */; };
-		CE72291BE6CA6786BFCB0A18 /* SupabaseConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 32F64D24BBF6DD1EC0C7A9A6 /* SupabaseConfig.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		06D9AB8F68CE3A1BE7902949 /* PlantMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantMonitorApp.swift; sourceTree = "<group>"; };
+		22F897682F95828100CBDF0C /* SupabaseConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SupabaseConfig.json; sourceTree = "<group>"; };
 		30751CB5854B4C9FB8F7C033 /* SupabaseConfig.example.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SupabaseConfig.example.json; sourceTree = "<group>"; };
 		319C8D14841EDC4196CE8603 /* PlantMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlantMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		32F64D24BBF6DD1EC0C7A9A6 /* SupabaseConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SupabaseConfig.json; sourceTree = "<group>"; };
 		3D337CAEF1AC91BF8463EEAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4264390EB0250CBC9BF3E79B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6AC39DFFE43689F1CEFBFF2E /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -46,8 +46,8 @@
 				06D9AB8F68CE3A1BE7902949 /* PlantMonitorApp.swift */,
 				ECBFBEBFC65ACC49F3CCACFE /* ReadingsStore.swift */,
 				30751CB5854B4C9FB8F7C033 /* SupabaseConfig.example.json */,
-				32F64D24BBF6DD1EC0C7A9A6 /* SupabaseConfig.json */,
 				D0B0ABDC96050028260CA6A8 /* SupabaseService.swift */,
+				22F897682F95828100CBDF0C /* SupabaseConfig.json */,
 			);
 			name = PlantMonitorApp;
 			path = ios/PlantMonitorApp;
@@ -121,7 +121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B0C8BDC1702B680E5C4AE68 /* SupabaseConfig.example.json in Resources */,
-				CE72291BE6CA6786BFCB0A18 /* SupabaseConfig.json in Resources */,
+				22F897692F95828100CBDF0C /* SupabaseConfig.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +178,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-								ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -242,7 +242,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-								ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -271,6 +271,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q57DY34Z65;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ios/PlantMonitorApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -293,6 +294,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q57DY34Z65;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ios/PlantMonitorApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
