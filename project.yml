@@ -28,6 +28,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: io.iamedu.PlantMonitorApp
         PRODUCT_NAME: PlantMonitor
         TARGETED_DEVICE_FAMILY: 1
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: false
         INFOPLIST_FILE: ios/PlantMonitorApp/Info.plist
         DEVELOPMENT_TEAM: ""
