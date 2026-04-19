@@ -1,10 +1,8 @@
 try:
-    from .config import SOIL_DRY, SOIL_WET, WATER_THRESHOLD_PERCENT
-    from .logic import build_payload
+    from .config import SOIL_DRY, SOIL_WET
     from .sensors import SoilMoistureSensor, DHT11Sensor, PhotoresistorSensor
 except ImportError:
-    from config import SOIL_DRY, SOIL_WET, WATER_THRESHOLD_PERCENT
-    from logic import build_payload
+    from config import SOIL_DRY, SOIL_WET
     from sensors import SoilMoistureSensor, DHT11Sensor, PhotoresistorSensor
 
 
@@ -13,17 +11,16 @@ def read_all_sensors(include_soil=True):
     climate_sensor = DHT11Sensor()
     light_sensor = PhotoresistorSensor()
 
-    soil_pct = soil_sensor.read_percent() if soil_sensor is not None else None
+    soil_raw = soil_sensor.read_raw() if soil_sensor is not None else None
     temperature_c, humidity_pct = climate_sensor.read()
-    light_lux = light_sensor.read_lux()
+    light_raw = light_sensor.read_raw()
 
-    return build_payload(
-        soil_pct=soil_pct,
-        temperature_c=temperature_c,
-        humidity_pct=humidity_pct,
-        light_lux=light_lux,
-        threshold_pct=WATER_THRESHOLD_PERCENT,
-    )
+    return {
+        "soil_moisture_raw": soil_raw,
+        "temperature_c": temperature_c,
+        "humidity_percent": humidity_pct,
+        "light_raw": light_raw,
+    }
 
 
 def run_loop(interval_s=300):

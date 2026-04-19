@@ -12,26 +12,31 @@ def init():
                 ts TEXT NOT NULL,
                 temperature_c REAL,
                 humidity_percent REAL,
-                light_lux REAL,
+                soil_moisture_raw INTEGER,
                 soil_moisture_percent REAL,
+                light_raw INTEGER,
+                light_lux REAL,
                 needs_water INTEGER
             )
         """)
 
 
-def insert(ts: str, reading) -> None:
+def insert(ts: str, reading, soil_pct, light_lux, needs_water) -> None:
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute(
             """INSERT INTO readings
-               (ts, temperature_c, humidity_percent, light_lux, soil_moisture_percent, needs_water)
-               VALUES (?, ?, ?, ?, ?, ?)""",
+               (ts, temperature_c, humidity_percent, soil_moisture_raw,
+                soil_moisture_percent, light_raw, light_lux, needs_water)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 ts,
                 reading.temperature_c,
                 reading.humidity_percent,
-                reading.light_lux,
-                reading.soil_moisture_percent,
-                None if reading.needs_water is None else int(reading.needs_water),
+                reading.soil_moisture_raw,
+                soil_pct,
+                reading.light_raw,
+                light_lux,
+                None if needs_water is None else int(needs_water),
             ),
         )
 
