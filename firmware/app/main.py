@@ -39,7 +39,7 @@ def run_loop(interval_s=300):
 
     connect(WIFI_SSID, WIFI_PASSWORD)
     while True:
-        payload = read_all_sensors(include_soil=False)
+        payload = read_all_sensors(include_soil=True)
         post_reading(SERVER_URL, payload)
         time.sleep(interval_s)
 
