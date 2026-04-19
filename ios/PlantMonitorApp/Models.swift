@@ -1,5 +1,11 @@
 import Foundation
 
+private let supabaseTimestampFormatter: ISO8601DateFormatter = {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return formatter
+}()
+
 struct SupabaseConfig: Decodable {
     let url: String
     let publishableKey: String
@@ -32,7 +38,7 @@ struct PlantReading: Identifiable, Decodable {
     }
 
     var timestamp: Date? {
-        ISO8601DateFormatter().date(from: ts)
+        supabaseTimestampFormatter.date(from: ts)
     }
 
     var moistureText: String {

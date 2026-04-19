@@ -90,13 +90,20 @@ struct MetricView: View {
     }
 }
 
+private let readingTimeFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .none
+    formatter.timeStyle = .medium
+    return formatter
+}()
+
 struct ReadingRow: View {
     let reading: PlantReading
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text(reading.timestamp ?? Date(), style: .time)
+                Text(reading.timestamp.map { readingTimeFormatter.string(from: $0) } ?? reading.ts)
                     .font(.headline)
                 Spacer()
                 Text(reading.needsWater == true ? "Water" : "OK")
