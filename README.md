@@ -26,6 +26,14 @@ A simple ESP32-based plant monitor that tracks soil moisture, temperature, humid
   - **D4** → DHT11 data
   - **D2** → photoresistor junction
 
+## Photos
+
+### iPhone app
+![Plant Monitor iPhone app](docs/images/app-screenshot.png)
+
+### Plant setup
+![Plant monitor hardware next to the plant](docs/images/plant-photo.jpg)
+
 ### Current calibration
 - **SOIL_DRY = 2962**
 - **SOIL_WET = 2485**
